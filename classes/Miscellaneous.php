@@ -46,13 +46,13 @@ class Miscellaneous extends Model
     {
         require_once('Mail.php');
         require_once('Mail/mime.php');
-        $from = "GCEMS Website Admin <www-data@gcems.duckdns.org>";
-        $mesg = "Someone has requested that your Gibson County Web Portal password be changed" . PHP_EOL
+        $from = "Vigo Twp FD Website Admin <www-data@vigotwpfd.duckdns.org>";
+        $mesg = "Someone has requested that your Vigo Township Web Portal password be changed" . PHP_EOL
                 . "Please click on the following link to change your password." . PHP_EOL
-                . "<a href=" . $link . "></a>";
-        $subj = "Gibson County Ambulance Service Login Information";
+                . $link ;
+        $subj = "Vigo Township Fire Dept Login Information";
         $mime = new Mail_mime();
-        $mime->setTXTBody($mesg);
+        $mime->setHTMLBody($mesg);
         $body = $mime->get();
 
         $headers = array('From' => $from,
@@ -81,7 +81,7 @@ class Miscellaneous extends Model
         return;
     }
 
-    public static function isPasswordExpired($empNumber)
+    public static function isPasswordExpired($personnelID)
     {
         /*
          * Set up the query to search for the employee number
@@ -93,5 +93,41 @@ class Miscellaneous extends Model
          if the flag in the DB is set to 1 then take the user to the password
          change form';
     }
-
+    
+    public static function checkIsLoggedIn()
+    {
+        if (isset($_SESSION['is_logged_in']))
+        {
+            return;
+        }
+        else
+        {
+            $string = '<p>You are not logged in.</p><br><p>You must be logged in' .
+                    ' to view this page.</p><br>';
+            Messages::setMsg($string, 'info');
+            echo "<META http-equiv='refresh' content='0;URL=" . ROOT_URL . "employees/login'>";
+            die();
+        }
+    }
+    
+    public static function checkIsAdmin()
+    {
+        /**
+         * I want to devise a system to allow the administrator to assign security
+         * levels.  The lowest level will be the most restricted.  Higher levels
+         * will have more access.
+         */
+        if (isset($_SESSION['is_logged_in']) && $_SESSION['user_data']['securityRole'] == 2)
+        {
+            return;
+        }
+        else
+        {
+            $string = '<p>You are not an administrator.</p><br><p>You must be' .
+                    ' an administrator to view this page.</p><br>';
+            Messages::setMsg($string, 'info');
+            echo "<META http-equiv='refresh' content='0;URL=" . ROOT_URL . "employees'>";
+            die();
+        }
+    }
 }

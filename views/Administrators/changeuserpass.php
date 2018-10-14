@@ -34,10 +34,10 @@
             <p>Please enter the name of the employee and a new password for the employee.  The old password will be revoked.</p>
         </div>						
         <ul >
-            <li id="employee_number" >
-                <label class="description" for="empNum">Employee Number </label>
+            <li id="personnelID" >
+                <label class="description" for="personnelID">Employee Number </label>
                 <div>
-                    <input id="empNum" name="empNum" class="element text medium" type="text" maxlength="9" value=""/> 
+                    <input id="personnelID" name="personnelID" class="element text medium" type="text" maxlength="9" value=""/> 
                 </div> 
             </li>
             <li id="passwordOne" >

@@ -46,14 +46,18 @@ class AdministratorModel extends Model
         Miscellaneous::checkIsAdmin();
         //Sanitize Post
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-        $payRate = $post['dollars'] + $post['cents'] / 100;
-        $startDate = $post['startYear'] . '-' . $post['startMonth'] . '-' . $post['startDay'] . ' 08:00:00';
+        
+        $dateOfBirth = $post['dobYear'] . '-' . $post['dobMonth'] . '-' . $post['dobDay'];
+        $startDate = $post['startYear'] . '-' . $post['startMonth'] . '-' . $post['startDay'];
 
         if ($post['submit'])
         {
-            $pwHash = password_hash($post['password'], PASSWORD_DEFAULT);
-            if ($post['password'] != $post['password2'])
+            $this->query('SELECT MAX(Personnel_ID) AS MaxPersonnelID FROM Personnel');
+            $result = $this->single();
+            $personnelID = $result['MaxPersonnelID'] + 1;
+            
+            $pwHash = password_hash($post['password1'], PASSWORD_DEFAULT);
+            if ($post['password1'] != $post['password2'])
             {
                 Messages::setMsg('The passwords do not match', 'error');
                 header('Location: ' . ROOT_URL . 'administrators/register');
@@ -68,34 +72,49 @@ class AdministratorModel extends Model
                 try
                 {
                     $this->transactionStart();
-                    $this->query('INSERT INTO employees (Employee_Number, First_Name, Middle_Name, Last_Name, Pay_Rate, Sick_Days_Remaining, Vacation_Days_Remaining, Personal_Days_Remaining, FMLA_Days_Remaining, Is_On_Short_Term_Disability, Is_On_Long_Term_Disability, Is_On_FMLA, username, password, email, Is_PW_Expired)'
-                            . ' VALUES (:Employee_Number, :First_Name, :Middle_Name, :Last_Name, :Pay_Rate, :Sick_Days_Remaining, :Vacation_Days_Remaining, :Personal_Days_Remaining, :FMLA_Days_Remaining, :Is_On_Short_Term_Disability, :Is_On_Long_Term_Disability, :Is_On_FMLA, :username, :password, :email, 1)');
-                    $this->bind(':Employee_Number', $post['employeeNumber']);
-                    $this->bind(':First_Name', $post['firstName']);
-                    $this->bind(':Middle_Name', $post['middleName']);
-                    $this->bind(':Last_Name', $post['lastName']);
-                    $this->bind(':username', $post['username']);
-                    $this->bind(':password', $pwHash);
-                    $this->bind(':email', $post['email']);
+                    $this->query('INSERT INTO personnel (Personnel_ID, FirstName, MiddleName, LastName, CallSign, DateOfBirth, Address_Line_1, Address_Line_2, Zip_Code, Telephone, Emergency_Contact_First_Name, Emergency_Contact_Last_Name, Emergency_Contact_Telephone, Username, Password, Email, Is_PW_Expired, Changed_By)'
+                            . ' VALUES (:Personnel_ID, :FirstName, :MiddleName, :LastName, :CallSign, :DateOfBirth, :Address_Line_1, :Address_Line_2, :Zip_Code, :Telephone, :Emergency_Contact_First_Name, :Emergency_Contact_Last_Name, :Emergency_Contact_Telephone, :Username, :Password, :Email, :Is_PW_Expired, :Changed_By)');
+                    $this->bind(':Personnel_ID', $personnelID);
+                    $this->bind(':FirstName', $post['firstName']);
+                    $this->bind(':MiddleName', $post['middleName']);
+                    $this->bind(':LastName', $post['lastName']);
+                    $this->bind(':CallSign', $post['callSign']);
+                    $this->bind(':DateOfBirth', $dateOfBirth);
+                    $this->bind(':Address_Line_1', $post['addressLineOne']);
+                    $this->bind(':Address_Line_2', $post['addressLineTwo']);
+                    $this->bind(':Zip_Code', $post['zipCode']);
+                    $this->bind('Telephone', $post['telephoneNumber']);
+                    $this->bind(':Emergency_Contact_First_Name', $post['emergencyFirstName']);
+                    $this->bind(':Emergency_Contact_Last_Name', $post['emergencyLastName']);
+                    $this->bind(':Emergency_Contact_Telephone', $post['emergencyTelephone']);
+                    $this->bind(':Username', $post['username']);
+                    $this->bind(':Password', $pwHash);
+                    $this->bind(':Email', $post['email']);
+                    $this->bind('Is_PW_Expired', 'Y');
+                    $this->bind(':Changed_By', $_SESSION['user_data']['personnelID']);
                     $this->execute();
 
-                    $this->query('INSERT INTO employee_securityroles (Employee_Number, Security_Role_ID)'
-                            . ' VALUES (:Employee_Number, :Security_Role_ID)');
-                    $this->bind(':Employee_Number', $post['employeeNumber']);
+                    $this->query('INSERT INTO personnel_securityroles (Personnel_ID, Security_Role_ID, Changed_By)'
+                            . ' VALUES (:Personnel_ID, :Security_Role_ID, :Changed_By)');
+                    $this->bind(':Personnel_ID', $personnelID);
                     $this->bind(':Security_Role_ID', $post['securityRole']);
+                    $this->bind(':Changed_By', $_SESSION['user_data']['personnelID']);
                     $this->execute();
 
-                    $this->query('INSERT INTO employee_hiredates (Employee_Number, Hire_Date)'
-                            . ' VALUES (:Employee_Number, :Hire_Date)');
-                    $this->bind(':Employee_Number', $post['employeeNumber']);
+                    $this->query('INSERT INTO personnel_employmentdates (Personnel_ID, Hire_Date, Changed_By)'
+                            . ' VALUES (:Personnel_ID, :Hire_Date, :Changed_By)');
+                    $this->bind(':Personnel_ID', $personnelID);
                     $this->bind(':Hire_Date', $startDate);
+                    $this->bind(':Changed_By', $_SESSION['user_data']['personnelID']);
                     $this->execute();
 
                     $this->transactionCommit();
+                    
                 } catch (PDOException $ex)
                 {
                     $this->transactionRollback();
                     echo $ex->getMessage();
+                    Messages::setMsg($ex->getMessage(), 'error');
                 }
 
                 if ($this->lastInsertId())
@@ -113,11 +132,11 @@ class AdministratorModel extends Model
     {
         Miscellaneous::checkIsLoggedIn();
         Miscellaneous::checkIsAdmin();
-        $this->query('SELECT * FROM employees e1'
-                . ' WHERE Inserted_at = '
-                . ' (SELECT MAX(e2.Inserted_at)'
-                . ' FROM employees e2'
-                . ' WHERE e1.Employee_Number = e2.Employee_Number)');
+        $this->query('SELECT * FROM personnel e1'
+                . ' WHERE Inserted_Timestamp = '
+                . ' (SELECT MAX(e2.Inserted_Timestamp)'
+                . ' FROM personnel e2'
+                . ' WHERE e1.Personnel_ID = e2.Personnel_ID)');
         $rows = $this->resultSet();
         return $rows;
         /*
@@ -144,34 +163,35 @@ class AdministratorModel extends Model
                 {
                     //Start the transaction
                     $this->transactionStart();
-                    $this->query('SELECT * FROM employees WHERE Employee_Number = :empNum ORDER BY Inserted_at DESC LIMIT 1');
-                    $this->bind(':empNum', $post['empNum']);
+                    $this->query('SELECT * FROM personnel WHERE Personnel_ID = :Personnel_ID ORDER BY Inserted_Timestamp DESC LIMIT 1');
+                    $this->bind(':Personnel_ID', $post['personnelID']);
                     $rows = $this->single();
 
                     //copy the required data fields into a new row complete with time stamps changed as appropriate
-                    $this->query('INSERT INTO employees (Employee_Number, First_Name, Middle_Name, Last_Name, Pay_Rate, Sick_Days_Remaining, Vacation_Days_Remaining, Personal_Days_Remaining, FMLA_Days_Remaining, Is_On_Short_Term_Disability, Is_On_Long_Term_Disability, Is_On_FMLA, username, password, email, Is_PW_Expired)'
-                            . ' VALUES (:Employee_Number, :First_Name, :Middle_Name, :Last_Name, :Pay_Rate, :Sick_Days_Remaining, :Vacation_Days_Remaining, :Personal_Days_Remaining, :FMLA_Days_Remaining, :Is_On_Short_Term_Disability, :Is_On_Long_Term_Disability, :Is_On_FMLA, :username, :password, :email, :isPWExpired)');
-                    $this->bind(':Employee_Number', $rows['Employee_Number']);
-                    $this->bind(':First_Name', $rows['First_Name']);
-                    $this->bind(':Middle_Name', $rows['Middle_Name']);
-                    $this->bind(':Last_Name', $rows['Last_Name']);
-                    $this->bind(':Pay_Rate', $rows['Pay_Rate']);
-                    $this->bind(':Sick_Days_Remaining', $rows['Sick_Days_Remaining']);
-                    $this->bind(':Vacation_Days_Remaining', $rows['Vacation_Days_Remaining']);
-                    $this->bind(':Personal_Days_Remaining', $rows['Personal_Days_Remaining']);
-                    $this->bind(':FMLA_Days_Remaining', $rows['FMLA_Days_Remaining']);
-                    $this->bind(':Is_On_Short_Term_Disability', $rows['Is_On_Short_Term_Disability']);
-                    $this->bind(':Is_On_Long_Term_Disability', $rows['Is_On_Long_Term_Disability']);
-                    $this->bind(':Is_On_FMLA', $rows['Is_On_FMLA']);
-                    $this->bind(':username', $rows['username']);
-                    $this->bind(':password', $pwHash);
-                    $this->bind(':email', $rows['email']);
-                    $this->bind(':isPWExpired', $rows['Is_PW_Expired']);
+                    $this->query('INSERT INTO personnel (Personnel_ID, FirstName, MiddleName, LastName, CallSign, DateOfBirth, SocialSecurityNumber, Address_Line_1, Address_Line_2, Zip_Code, Telephone, Emergency_Contact_Name, Emergency_Contact_Telephone, Username, Password, Email, Is_PW_Expired)'
+                            . ' VALUES (:Personnel_ID, :FirstName, :MiddleName, :LastName, :CallSign, :DateOfBirth, :SocialSecurityNumber, :Address_Line_1, :Address_Line_2, :Zip_Code, :Telephone, :Emergency_Contact_Name, :Emergency_Contact_Telephone, :Username, :Password, :Email, :Is_PW_Expired)');
+                    $this->bind(':Personnel_ID', $rows['Personnel_ID']);
+                    $this->bind(':FirstName', $rows['FirstName']);
+                    $this->bind(':MiddleName', $rows['MiddleName']);
+                    $this->bind(':LastName', $rows['LastName']);
+                    $this->bind(':CallSign', $rows['CallSign']);
+                    $this->bind(':DateOfBirth', $rows['DateOfBirth']); 
+                    $this->bind(':SocialSecurityNumber', $rows['SocialSecurityNumber']);
+                    $this->bind(':Address_Line_1', $rows['Address_Line_1']);
+                    $this->bind(':Address_Line_2', $rows['Address_Line_2']);
+                    $this->bind(':Zip_Code', $rows['Zip_Code']);
+                    $this->bind(':Telephone', $rows['Telephone']);
+                    $this->bind(':Emergency_Contact_Name', $rows['Emergency_Contact_Name']);
+                    $this->bind(':Emergency_Contact_Telephone', $rows['Emergency_Contact_Telephone']);
+                    $this->bind(':Username', $rows['Username']);
+                    $this->bind(':Password', $pwHash);
+                    $this->bind(':Email', $rows['Email']);
+                    $this->bind(':Is_PW_Expired', $rows['Is_PW_Expired']);
                     $this->execute();
 
                     //update the above inserted row with the new password hash
-                    $this->query('UPDATE employees SET password = :pwHash WHERE Employee_Number = :empNum ORDER BY Inserted_at DESC LIMIT 1');
-                    $this->bind('empNum', $post['empNum']);
+                    $this->query('UPDATE personnel SET Password = :pwHash WHERE Personnel_ID = :personnelID ORDER BY Inserted_Timestamp DESC LIMIT 1');
+                    $this->bind('personnelID', $post['personnelID']);
                     $this->bind(':pwHash', $pwHash);
                     $this->execute();
 
@@ -195,67 +215,9 @@ class AdministratorModel extends Model
         }
         return;
     }
-
-    public function currentpay()
-    {
-
-        Miscellaneous::checkIsLoggedIn();
-        Miscellaneous::checkIsAdmin();
-        /*
-         * This method will be used to display the current pay period.
-         * I am also going to try to add in the ability to enter new information
-         * from this page using a modal.
-         * 
-         * 
-         * 10) Display the current pay period information
-         * 20) Display a button to add a new entry.
-         * 30) Display buttons to delete or correct information already entered.
-         * 
-         */
-
-        $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-        $now = new DateTime("now");
-
-        $firstDayObject = Miscellaneous::determineFirstDay($now);
-
-        $lastDayObject = $firstDayObject; //+ DateTimeImmutable::add()
-        $firstDayObject = DateTimeImmutable::createFromMutable($firstDayObject);
-
-        $lastDayObject->add(new DateInterval('P14D'));
-        $firstDay = $firstDayObject->format('Y-m-d') . ' 08:00:00';
-        $lastDay = $lastDayObject->format('Y-m-d') . ' 08:00:00';
-
-        $this->query('SELECT e1.*, eprh.* FROM employees e1 '
-                . 'LEFT OUTER JOIN employees e2 ON '
-                . 'e1.employee_number = e2.employee_number AND '
-                . 'e2.inserted_at > e1.inserted_at '
-                . 'LEFT JOIN employee_payrollhours eprh ON '
-                . 'eprh.employee_number = e1.employee_number '
-                . 'WHERE e2.employee_number is null');
-        //$this->bind(':empNum', $_SESSION['user_data']['empNum']);
-        $this->bind('firstDay', $firstDay);
-        $this->bind('lastDay', $lastDay);
-        $rows = $this->resultSet();
-
-        return $rows;
-    }
-
-    public function historicalpay()
-    {
-        Miscellaneous::checkIsLoggedIn();
-        Miscellaneous::checkIsAdmin();
-        /**
-         * This option is inserting '18:00' into the time fields
-         * if the employee has 'null' times
-         * Otherwise, it looks as if it is correct
-         * 
-         * I fixed the null issue.
-         * 
-         * Thank you to elyalvarado from StackOverflow for this
-         * MySQL solution.
-         * https://stackoverflow.com/users/3236163/elyalvarado
-         */
+/*
+    
+    
         $this->query('SELECT e1.*, eprh.* FROM employees e1 '
                 . 'LEFT OUTER JOIN employees e2 ON '
                 . 'e1.employee_number = e2.employee_number AND '
@@ -283,6 +245,6 @@ class AdministratorModel extends Model
           return $rows;
          * 
          */
-    }
-
+    /*
+   */
 }

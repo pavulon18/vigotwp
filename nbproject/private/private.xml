@@ -3,8 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/vigotwp/classes/Messages.php</file>
-            <file>file:/C:/wamp64/www/vigotwp/index.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/Administrators/register.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/classes/Miscellaneous.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/config.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/models/administrator.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/controllers/employees.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/Home/index.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/Employees/login.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/models/employee.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/main.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/Administrators/roster.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/views/Administrators/index.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/classes/Model.php</file>
+            <file>file:/C:/wamp64/www/Vigo-Township-Record-Keeping/index.php</file>
         </group>
     </open-files>
 </project-private>

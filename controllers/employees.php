@@ -43,7 +43,7 @@ class Employees extends Controller
     {
         unset($_SESSION['is_logged_in']);
         unset($_SESSION['user_data']);
-        unset($_SESSION['empNum']);
+        unset($_SESSION['personnelID']);
         session_destroy();
 
         //Redirect

@@ -41,7 +41,7 @@ class EmployeeModel extends Model
         if ($post['submit'])
         {
             // Compare Login
-            $this->query('SELECT * FROM employees WHERE username = :username ORDER BY Inserted_at DESC LIMIT 1');
+            $this->query('SELECT * FROM personnel WHERE Username = :username ORDER BY Inserted_Timestamp DESC LIMIT 1');
             $this->bind(':username', $post['username']);
             $row = $this->single();
 
@@ -50,17 +50,16 @@ class EmployeeModel extends Model
                 Messages::setMsg('Incorrect Login', 'error');
                 return;
             }
-            $this->query('SELECT * FROM employee_securityroles WHERE employee_securityroles.Employee_Number = ' . $row['Employee_Number'] . ' ORDER BY Inserted_at DESC LIMIT 1');
-            //$this->bind(':empNumber', $row['Employee_Number']);   March 31 , 2018 I do not believe this line needs to be here.  I'm going to comment it out and see if that changes any functionality
+            $this->query('SELECT * FROM personnel_securityroles WHERE personnel_securityroles.Personnel_ID = ' . $row['Personnel_ID'] . ' ORDER BY Inserted_Timestamp DESC LIMIT 1');
             $row2 = $this->single();
 
-            if (password_verify($post['password'], $row['password']))
+            if (password_verify($post['password'], $row['Password']))
             {
                 $_SESSION['is_logged_in'] = true;
                 $_SESSION['user_data'] = array(
-                    "empNum" => $row['Employee_Number'],
-                    "firstName" => $row['First_Name'],
-                    "lastName" => $row['Last_Name'],
+                    "personnelID" => $row['Personnel_ID'],
+                    "firstName" => $row['FirstName'],
+                    "lastName" => $row['LastName'],
                     "securityRole" => $row2['Security_Role_ID']
                 );
                 //Checking if the password has been expired.  If yes then the password will need to be changed.
@@ -93,11 +92,11 @@ class EmployeeModel extends Model
         if ($post['submit'])
         {
             //Search the database for the given email address
-            $this->query('SELECT * FROM employees WHERE email = :email ORDER BY Inserted_at DESC LIMIT 1');
+            $this->query('SELECT * FROM personnel WHERE Email = :email ORDER BY Inserted_Timestamp DESC LIMIT 1');
             $this->bind(':email', $post['email']);
             $row = $this->single();
-            $email = $row['email'];
-            $empNumber = $row['Employee_Number'];
+            $email = $row['Email'];
+            $personnelID = $row['Personnel_ID'];
 
             if (!empty($row)) //checking if the search returned a value
             {
@@ -105,10 +104,10 @@ class EmployeeModel extends Model
                 StoPasswordReset::generateToken($tokenForLink, $tokenHashForDatabase);
 
                 // Store the hash together with the UserId and the creation date
-                $this->query('INSERT INTO recoveryemails_enc (Employee_Number, Token)'
-                        . ' VALUES (:empNumber, :token)');
+                $this->query('INSERT INTO recoveryemails_enc (Personnel_ID, Token)'
+                        . ' VALUES (:personnelID, :token)');
                 $this->bind(':token', $tokenHashForDatabase);
-                $this->bind(':empNumber', $empNumber);
+                $this->bind(':personnelID', $personnelID);
                 $this->execute();
 
                 // Send link with the original token
@@ -155,7 +154,7 @@ class EmployeeModel extends Model
             $this->query('UPDATE recoveryemails_enc SET Redeemed_DateTime = now() where Token = :token');
             $this->bind(':token', hash('sha256', $id, FALSE));
             $this->execute();
-            $_SESSION['empNum'] = $result['Employee_Number'];
+            $_SESSION['personnelID'] = $result['Personnel_ID'];
 
             header('Location: ' . ROOT_URL . 'employees/changeforgottenpassword');
             die();
@@ -178,12 +177,12 @@ class EmployeeModel extends Model
 
         // Sanitize POST
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        $empNum = $this->test_input($_SESSION['empNum']);
+        $personnelID = $this->test_input($_SESSION['personnelID']);
 
         if ($post['submit'])
         {
-            $this->query('SELECT * FROM employees WHERE Employee_Number = :empNum ORDER BY Inserted_at DESC LIMIT 1');
-            $this->bind(':empNum', $empNum);
+            $this->query('SELECT * FROM personnel WHERE Personnel_ID = :personnelID ORDER BY Inserted_Timestamp DESC LIMIT 1');
+            $this->bind(':personnelID', $personnelID);
             $row = $this->single();
 
             if ($post['newPassword1'] === $post['newPassword2'])
@@ -215,8 +214,8 @@ class EmployeeModel extends Model
 
         if ($post['submit'])
         {
-            $this->query('SELECT * FROM employees WHERE Employee_Number = :empNum ORDER BY Inserted_at DESC LIMIT 1');
-            $this->bind(':empNum', $_SESSION['user_data']['empNum']);
+            $this->query('SELECT * FROM personnel WHERE Personnel_ID = :personnelID ORDER BY Inserted_Timestamp DESC LIMIT 1');
+            $this->bind(':personnelID', $_SESSION['user_data']['personnelID']);
             $row = $this->single();
 
             if (empty($post['oldPassword']))
@@ -224,7 +223,7 @@ class EmployeeModel extends Model
                 Messages::setMsg('The old password must be supplied.', 'error');
                 return; // do I want a return statement or do I want
                 //header('Location: ' . ROOT_URL);  // this header statement?
-            } elseif (!password_verify($post['oldPassword'], $row['password']))
+            } elseif (!password_verify($post['oldPassword'], $row['Password']))
             {
                 Messages::setMsg('There was an error.  Please try again.', 'error');
                 return; // do I want a return statement or do I want

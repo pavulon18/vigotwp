@@ -28,10 +28,10 @@
 <img id="top" src="/assets/graphics/top.png" alt="">
 <div id="form_container">
 
-    <h1><a>Employee Login</a></h1>
+    <h1><a>Fire Fighter Login</a></h1>
     <form id="form_71954" class="appnitro"  method="post" action="<?php htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <div class="form_description">
-            <h2>Employee Login</h2>
+            <h2>Fire Fighter Login</h2>
             <p></p>
         </div>						
         <ul >

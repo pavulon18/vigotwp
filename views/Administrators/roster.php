@@ -30,38 +30,29 @@ Miscellaneous::checkIsLoggedIn();
     <div>
         <div class="row justify-content-md-center">
             <div class="col">
-<?php echo 'First Name' ?>
+                <?php echo 'First Name' ?>
             </div>
             <div class="col">
-<?php echo 'Last Name' ?>
+                <?php echo 'Last Name' ?>
             </div>
             <div class="col">
-<?php echo 'Sick Days Remaining' ?>
+                <?php echo 'Rank' ?>
             </div>
             <div class="col">
-<?php echo 'Vacation Days Remaining' ?>
-            </div>
-            <div class="col">
-<?php echo 'Personal Days Remaining' ?>
+                <?php echo 'Radio Callsign' ?>
             </div>
         </div>
-<?php foreach ($viewmodel as $item) : ?>
+        <?php foreach ($viewmodel as $item) : ?>
             <div class="row justify-content-md-center">
                 <div class="col">
-    <?php echo $item['First_Name']; ?>
+                   
                 </div>
                 <div class="col">
-    <?php echo $item['Last_Name']; ?>
+                    
                 </div>
                 <div class="col">
-    <?php echo $item['Sick_Days_Remaining']; ?>
-                </div>
-                <div class="col">
-    <?php echo $item['Vacation_Days_Remaining']; ?>
-                </div>
-                <div class="col">
-    <?php echo $item['Personal_Days_Remaining']; ?>
+                    
                 </div>
             </div>
-<?php endforeach; ?>
+        <?php endforeach; ?>
     </div>

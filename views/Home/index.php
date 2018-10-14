@@ -24,19 +24,13 @@
  */
 ?>
 <div class="text-center">
-    <h2>Welcome to the home of Gibson County EMS Employee Web Portal</h2>
-    <p class="lead">Gibson EMS Web Portal and timesheet application</p>
+    <h2>Welcome to the home of Vigo Township Fire Department Web Portal</h2>
+    <p class="lead">Vigo Twp FD Web Portal and timesheet application</p>
 </div>
 <div class="text-info">
     <p class="text-left">Thank you for taking the time to look at our website.</p>
-    <p class="text-left">Employees may login through this portal to access certain
-        work related functions.</p><br>
-</div>
-<div class="text-info">
-    <p class="text-left">NOTICE:  September 9, 2018</p>
-    <p class="text-left">The database has been totally reset.  Any employee 
-        wishing to log into the system will need to contact me with the appropriate
-        information for inclusion into the new database.</p>
+    <p class="text-left">Fire fighters may login through this portal to access certain
+        department related functions.</p><br>
 </div>
 <div class="center">
     <p>

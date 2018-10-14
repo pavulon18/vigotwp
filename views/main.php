@@ -32,20 +32,20 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="GCAS Web Portal and Time Sheet">
+        <meta name="description" content="Vigo Township Fire Department Web Portal">
         <meta name="author" content="Jim Baize">
         <link rel="icon" href="/assets/graphics/favicon.ico">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
-        <title>Gibson County EMS Employee Web Portal</title>
+        <title>Vigo Township Fire Department</title>
 
     </head>
 
     <body>
         <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" href="<?php echo ROOT_URL; ?>">GEMS Web Portal</a>
+            <a class="navbar-brand" href="<?php echo ROOT_URL; ?>">Vigo Twp FD Web Portal</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -59,7 +59,7 @@
                             <a class="nav-link" href="<?php echo ROOT_URL; ?>jobtitles"> Job Titles </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo ROOT_URL; ?>employees"> Employees </a>
+                            <a class="nav-link" href="<?php echo ROOT_URL; ?>employees"> Roster </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo ROOT_URL; ?>galleries"> Picture Gallery </a>
