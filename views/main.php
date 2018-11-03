@@ -34,7 +34,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Vigo Township Fire Department Web Portal">
         <meta name="author" content="Jim Baize">
-        <link rel="icon" href="/assets/graphics/favicon.ico">
+        <link rel="icon" href="/assets/images/favicon.ico">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">

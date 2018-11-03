@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  */
 
+//namespace vigoTwpFd;
+
 abstract class Model
 {
 
@@ -141,8 +143,8 @@ abstract class Model
             $this->bind(':Personnel_ID', $row['Personnel_ID']);
             $this->execute();
 
-            $this->query('INSERT INTO personnel (Personnel_ID, FirstName, MiddleName, LastName, CallSign, DateOfBirth, SocialSecurityNumber, Address_Line_1, Address_Line_2, Zip_Code, Telephone, Emergency_Contact_Name, Emergency_Contact_Telephone, Username, Password, Email, Is_PW_Expired)'
-                    . ' VALUES(:Personnel_ID, :FirstName, :MiddleName, :LastName, :CallSign, :DateOfBirth, :SocialSecurityNumber, :Address_Line_1, :Address_Line_2, :Zip_Code, :Telephone, :Emergency_Contact_Name, :Emergency_Contact_Telephone, :Username, :Password, :Email, :Is_PW_Expired)');
+            $this->query('INSERT INTO personnel (Personnel_ID, FirstName, MiddleName, LastName, CallSign, DateOfBirth, SocialSecurityNumber, Address_Line_1, Address_Line_2, Zip_Code, Telephone, Emergency_Contact_First_Name, Emergency_Contact_Last_Name, Emergency_Contact_Telephone, Username, Password, Email, Is_PW_Expired)'
+                    . ' VALUES(:Personnel_ID, :FirstName, :MiddleName, :LastName, :CallSign, :DateOfBirth, :SocialSecurityNumber, :Address_Line_1, :Address_Line_2, :Zip_Code, :Telephone, :Emergency_Contact_First_Name, :Emergency_Contact_Last_Name, :Emergency_Contact_Telephone, :Username, :Password, :Email, :Is_PW_Expired)');
             $this->bind(':Personnel_ID', $row['Personnel_ID']);
             $this->bind(':FirstName', $row['FirstName']);
             $this->bind(':MiddleName', $row['MiddleName']);
@@ -154,7 +156,8 @@ abstract class Model
             $this->bind(':Address_Line_2', $row['Address_Line_2']);
             $this->bind(':Zip_Code', $row['Zip_Code']);
             $this->bind(':Telephone', $row['Telephone']);
-            $this->bind(':Emergency_Contact_Name', $row['Emergency_Contact_Name']);
+            $this->bind(':Emergency_Contact_First_Name', $row['Emergency_Contact_First_Name']);
+            $this->bind(':Emergency_Contact_Last_Name', $row['Emergency_Contact_Last_Name']);
             $this->bind(':Emergency_Contact_Telephone', $row['Emergency_Contact_Telephone']);
             $this->bind(':Username', $row['Username']);
             $this->bind(':Password', $pwHash);

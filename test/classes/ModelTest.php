@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * The MIT License
  *
  * Copyright 2018 Jim Baize <pavulon@hotmail.com>.
@@ -24,41 +24,36 @@
  * THE SOFTWARE.
  */
 
-class Messages
+use PHPUnit\Framework\TestCase;
+use vigoTwpFd\Model;
+require_once('classes/Model.php');
+
+class ModelTest extends TestCase
 {
-    public static function setMsg($text, $type)
+    /**
+     * @param string $originalString String to be cleaned
+     * @param string $expectedResult What we expect our clean result to be
+     *
+     * @dataProvider providerTestTest_Input
+     */
+    
+    /**
+    public function testTest_Input($originalString, $expectedResult)
     {
-        if ($type == 'error')
-        {
-            $_SESSION['errorMsg'] = $text;
-        } elseif ($type == 'sucess')
-        {
-            $_SESSION['successMsg'] = $text;
-        } else
-        {
-            $_SESSION['infoMsg'] = $text;
-        }
+        $result = (new Model)->test_input($originalString);
+        $this->assertsEquals($expectedResult, $result);
     }
-
-    public static function display()
+     */
+    
+    public function providerTestTest_Input()
     {
-        if (isset($_SESSION['errorMsg']))
-        {
-            echo '<div class="alert alert-danger">' . $_SESSION['errorMsg'] . '</div>';
-            unset($_SESSION['errorMsg']);
-        }
-
-        if (isset($_SESSION['successMsg']))
-        {
-            echo '<div class="alert alert-sucess">' . $_SESSION['successMsg'] . '</div>';
-            unset($_SESSION['successMsg']);
-        }
-
-        if (isset($_SESSION['infoMsg']))
-        {
-            echo '<div class="alert alert-info">' . $_SESSION['infoMsg'] . '</div>';
-            unset($_SESSION['infoMsg']);
-        }
+        return array(
+            array('This string will be sluggified', 'this string will be sluggified'),
+            array('THIS STRING WILL BE SLUGGIFIED', 'this-string-will-be-sluggified'),
+            array('This1 string2 will3 be 44 sluggified10', 'this1-string2-will3-be-44-sluggified10'),
+            array('This! @string#$ %$will ()be "sluggified', 'this-string-will-be-sluggified'),
+            array("Tänk efter nu – förr'n vi föser dig bort", 'tank-efter-nu-forrn-vi-foser-dig-bort'),
+            array('', ''),
+        );
     }
-
 }
