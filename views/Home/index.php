@@ -25,7 +25,7 @@
 ?>
 <div class="text-center">
     <h2>Welcome to the home of Vigo Township Fire Department Web Portal</h2>
-    <p class="lead">Vigo Twp FD Web Portal and timesheet application</p>
+    <p class="lead">Vigo Twp FD Web Portal</p>
 </div>
 <div class="text-info">
     <p class="text-left">Thank you for taking the time to look at our website.</p>
