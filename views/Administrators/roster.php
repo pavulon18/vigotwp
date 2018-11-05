@@ -36,7 +36,7 @@ Miscellaneous::checkIsLoggedIn();
                 <?php echo 'Last Name' ?>
             </div>
             <div class="col">
-                <?php echo 'Rank' ?>
+                <?php echo 'Email' ?>
             </div>
             <div class="col">
                 <?php echo 'Radio Callsign' ?>
@@ -45,13 +45,16 @@ Miscellaneous::checkIsLoggedIn();
         <?php foreach ($viewmodel as $item) : ?>
             <div class="row justify-content-md-center">
                 <div class="col">
-                   
+                    <?php echo $item['FirstName']; ?>
                 </div>
                 <div class="col">
-                    
+                    <?php echo $item['LastName']; ?>
                 </div>
                 <div class="col">
-                    
+                    <?php echo $item['Email']; ?>
+                </div>
+                <div class="col">
+                    <?php echo $item['CallSign']; ?>
                 </div>
             </div>
         <?php endforeach; ?>
