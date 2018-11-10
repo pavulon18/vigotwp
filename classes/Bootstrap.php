@@ -38,14 +38,17 @@ class Bootstrap
         if ($this->request['controller'] == "")
         {
             $this->controller = 'home';
-        } else
+        }
+        else
         {
             $this->controller = $this->request['controller'];
         }
+        
         if ($this->request['action'] == "")
         {
             $this->action = 'index';
-        } else
+        }
+        else
         {
             $this->action = $this->request['action'];
         }

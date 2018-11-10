@@ -42,8 +42,6 @@ require_once('classes/Model.php');
 require_once('classes/Messages.php');
 require_once('classes/Miscellaneous.php');
 require_once('classes/StoPasswordReset.php');
-//require_once('classes/rb.php');
-//require_once('classes/rb-mysql.php');
 
 require_once('controllers/home.php');
 require_once('controllers/employees.php');

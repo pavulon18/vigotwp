@@ -31,7 +31,6 @@
  */
 abstract class Controller
 {
-
     protected $request;
     protected $action;
 
@@ -57,5 +56,4 @@ abstract class Controller
             require($view);
         }
     }
-
 }

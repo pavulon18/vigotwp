@@ -28,7 +28,6 @@
 
 abstract class Model
 {
-
     protected $dbh;
     protected $stmt;
     protected $error;
@@ -46,9 +45,7 @@ abstract class Model
         catch (PDOException $e)
         {
             $this->error = $e->getMessage();
-        }
-        
-//        R::setup("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, $options); //for both mysql or mariaDB
+        }        
     }
 
     public function query($query)
@@ -108,11 +105,12 @@ abstract class Model
         return $this->dbh->lastInsertId();
     }
 
-    public function test_input($data)
+    public function test_input($dataIn)
     {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
+        $data = htmlspecialchars(stripslashes(trim($dataIn)));
+        //$data = trim($data);
+        //$data = stripslashes($data);
+        //$data = htmlspecialchars($data);
         return $data;
     }
 
@@ -173,5 +171,4 @@ abstract class Model
         }
         return;
     }
-
 }
